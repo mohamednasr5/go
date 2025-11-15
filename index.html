@@ -82,14 +82,13 @@
                 grid-template-columns: 1fr;
             }
         }
-
     </style>
 
 </head>
 <body>
 
 <div class="container">
-    <h1>مولد بطاقة الانتخاب</h1>
+    <h1>مولد بطاقة الانتخاب | برمجة مهندس محمد حماد</h1>
 
     <div class="inputs">
         <input type="text" id="name" placeholder="اسم الشخص">
@@ -102,7 +101,6 @@
     </div>
 
     <button class="downloadBtn" onclick="downloadImage()">⬇ تحميل الصورة</button>
-
 </div>
 
 <script>
@@ -113,17 +111,10 @@
     function loadImage() {
         let img = new Image();
         img.crossOrigin = "anonymous";
-        img.onload = () => {
-            bg = img;
-            update();
-        };
-        img.onerror = () => {
-            console.log("خطأ في تحميل الصورة");
-            update();
-        };
+        img.onload = () => { bg = img; update(); };
+        img.onerror = () => { console.log("خطأ في تحميل الصورة"); update(); };
         img.src = imageUrl;
     }
-
     loadImage();
 
     const rectX = 180;
@@ -132,9 +123,9 @@
     const rectH = 140;
 
     function update() {
-        const name = document.getElementById("name").value;
-        const family = document.getElementById("family").value;
-        const country = document.getElementById("country").value;
+        const name = document.getElementById("name").value || "";
+        const family = document.getElementById("family").value || "";
+        const country = document.getElementById("country").value || "";
 
         const canvas = document.getElementById("previewCanvas");
         const ctx = canvas.getContext("2d");
@@ -142,26 +133,29 @@
         canvas.width = 900;
         canvas.height = 600;
 
-        if (bg) {
-            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-        }
+        if (bg) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        // النصوص
+        const lines = [
+            name,
+            `وعائلتي ${family}`,
+            `من ${country}`
+        ];
+
         ctx.fillStyle = "#000";
         ctx.font = "bold 32px Arial";
+        ctx.textAlign = "center";
 
         const centerX = rectX + rectW / 2;
-        const centerY = rectY + rectH / 2;
-        const lineSpacing = 40;
 
-        const line1 = name;
-        const line2 = `وعائلتي ${family}`;
-        const line3 = `من ${country}`;
+        // توزيع الـ 3 أسطر داخل المستطيل بالتساوي
+        const totalLines = lines.length;
+        const lineHeight = rectH / (totalLines + 1);
 
-        ctx.fillText(line1, centerX, centerY - lineSpacing);
-        ctx.fillText(line2, centerX, centerY);
-        ctx.fillText(line3, centerX, centerY + lineSpacing);
+        for (let i = 0; i < totalLines; i++) {
+            let y = rectY + lineHeight * (i + 1);
+            ctx.fillText(lines[i], centerX, y);
+        }
     }
 
     function downloadImage() {
