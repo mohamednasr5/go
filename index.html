@@ -5,82 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مولد بطاقة الانتخاب</title>
 
+    <!-- إضافة خط Swissra الحقيقي -->
     <style>
+        @font-face {
+            font-family: 'Swissra';
+            src: url('https://raw.githubusercontent.com/mohamednasr5/go/main/alfont_com_AlFont_com_Swissra-Condensed-Bold.otf') format('opentype');
+            font-weight: bold;
+        }
+
         body {
             margin: 0;
-            padding: 0;
-            background: #eee;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            padding: 10px;
+            background: linear-gradient(135deg, #CE1126 0%, #FFFFFF 50%, #000000 100%);
+            font-family: 'Swissra', sans-serif;
         }
 
         .container {
             background: #fff;
-            padding: 25px;
+            padding: 20px;
             border-radius: 20px;
-            width: 90%;
-            max-width: 1200px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+            box-shadow: 0 15px 50px rgba(206, 17, 38, 0.3);
+            border-top: 5px solid #CE1126;
         }
 
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            color: #000 !important; /* تنفيذ طلبك */
+            font-weight: bold;
+            margin-bottom: 25px;
+            font-size: 26px;
+            font-family: 'Swissra', sans-serif;
         }
 
         .inputs {
-            margin-bottom: 25px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .inputs {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
         }
 
         input {
             padding: 12px;
             font-size: 18px;
-            border: 2px solid #ccc;
+            border: 3px solid #CE1126;
             border-radius: 10px;
+            width: 100%;
+            font-family: 'Swissra', sans-serif;
         }
 
-        .preview-box {
-            display: flex;
-            justify-content: center;
+        .controls {
             margin-bottom: 20px;
+            background: #f7f7f7;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #CE1126;
+        }
+
+        .controls label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+            font-family: 'Swissra', sans-serif;
         }
 
         canvas {
             width: 100%;
-            max-width: 900px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .downloadBtn {
-            background: linear-gradient(135deg, #4f46e5, #6d28d9);
+            background: linear-gradient(135deg, #CE1126, #000000);
             color: #fff;
             padding: 14px 26px;
             font-size: 20px;
-            border: none;
             border-radius: 12px;
+            border: none;
+            width: 100%;
+            margin-top: 15px;
             cursor: pointer;
-            display: block;
-            margin: 0 auto;
-            transition: 0.3s;
+            font-family: 'Swissra', sans-serif;
         }
 
-        .downloadBtn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+        .marquee-box {
+            margin-top: 15px;
+            width: 100%;
+            background: linear-gradient(90deg, #CE1126, #000000);
+            color: #fff;
+            padding: 12px;
+            overflow: hidden;
+            font-size: 18px;
+            border-radius: 10px;
+            direction: ltr;
+            font-family: 'Swissra', sans-serif;
         }
 
-        @media (max-width: 768px) {
-            .inputs {
-                grid-template-columns: 1fr;
-            }
+        .marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: slideRight 18s linear infinite;
+        }
+
+        @keyframes slideRight {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
         }
     </style>
 
@@ -88,7 +126,7 @@
 <body>
 
 <div class="container">
-    <h1>مولد بطاقة الانتخاب | برمجة مهندس محمد حماد</h1>
+    <h1>دعم الأسد والحوت | برمجة مهندس محمد حماد</h1>
 
     <div class="inputs">
         <input type="text" id="name" placeholder="اسم الشخص">
@@ -96,23 +134,42 @@
         <input type="text" id="country" placeholder="اسم البلد">
     </div>
 
-    <div class="preview-box">
-        <canvas id="previewCanvas"></canvas>
+    <div class="controls">
+        <label>🔠 حجم الخط</label>
+        <input type="range" id="fontSizeControl" min="20" max="80" value="36">
+
+        <label>↔ تحريك النص يمين / يسار</label>
+        <input type="range" id="shiftXControl" min="-200" max="200" value="0">
+
+        <label>↕ تحريك النص أعلى / أسفل</label>
+        <input type="range" id="shiftYControl" min="-100" max="100" value="0">
+
+        <label>📏 المسافة بين الصفوف</label>
+        <input type="range" id="spacingControl" min="20" max="120" value="50">
+
+        <label>🎨 اختيار لون النص</label>
+        <input type="color" id="textColor" value="#000000">
     </div>
+
+    <canvas id="previewCanvas"></canvas>
 
     <button class="downloadBtn" onclick="downloadImage()">⬇ تحميل الصورة</button>
 </div>
 
-<script>
-    const imageUrl = "https://raw.githubusercontent.com/mohamednasr5/go/3d100521b8c46af4401f419ab0239fa7210fa3b3/11.png";
+<div class="marquee-box">
+    <div class="marquee-text">
+        | كل الدعم للحاج أحمد الحديدي رمز الأسد 🦁 ورقم 3 | كل الدعم للاستاذ البدوي جميز رمز الحوت 🐋 ورقم 8 |
+    </div>
+</div>
 
+<script>
+    const imageUrl = "https://raw.githubusercontent.com/mohamednasr5/go/main/11.png";
     let bg = null;
 
     function loadImage() {
-        let img = new Image();
+        const img = new Image();
         img.crossOrigin = "anonymous";
         img.onload = () => { bg = img; update(); };
-        img.onerror = () => { console.log("خطأ في تحميل الصورة"); update(); };
         img.src = imageUrl;
     }
     loadImage();
@@ -123,53 +180,55 @@
     const rectH = 140;
 
     function update() {
-        const name = document.getElementById("name").value || "";
-        const family = document.getElementById("family").value || "";
-        const country = document.getElementById("country").value || "";
+        const name = document.getElementById("name").value;
+        const family = document.getElementById("family").value;
+        const country = document.getElementById("country").value;
+
+        const fontSize = parseInt(document.getElementById("fontSizeControl").value);
+        const shiftX = parseInt(document.getElementById("shiftXControl").value);
+        const shiftY = parseInt(document.getElementById("shiftYControl").value);
+        const spacing = parseInt(document.getElementById("spacingControl").value);
+        const color = document.getElementById("textColor").value;
 
         const canvas = document.getElementById("previewCanvas");
         const ctx = canvas.getContext("2d");
-
         canvas.width = 900;
         canvas.height = 600;
 
         if (bg) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
-        // النصوص
         const lines = [
             name,
             `وعائلتي ${family}`,
             `من ${country}`
         ];
 
-        ctx.fillStyle = "#000";
-        ctx.font = "bold 32px Arial";
+        ctx.font = `bold ${fontSize}px Swissra`;
+        ctx.fillStyle = color;
         ctx.textAlign = "center";
 
-        const centerX = rectX + rectW / 2;
+        const centerX = rectX + rectW / 2 + shiftX;
+        const centerY = rectY + rectH / 2 + shiftY;
 
-        // توزيع الـ 3 أسطر داخل المستطيل بالتساوي
-        const totalLines = lines.length;
-        const lineHeight = rectH / (totalLines + 1);
+        ctx.shadowColor = "rgba(255,255,255,0.6)";
+        ctx.shadowBlur = 4;
 
-        for (let i = 0; i < totalLines; i++) {
-            let y = rectY + lineHeight * (i + 1);
-            ctx.fillText(lines[i], centerX, y);
-        }
+        lines.forEach((line, i) => {
+            ctx.fillText(line, centerX, centerY + (i - 1) * spacing);
+        });
     }
 
     function downloadImage() {
         const canvas = document.getElementById("previewCanvas");
         const link = document.createElement("a");
-        link.download = "mohamed hammad.png";
+        link.download = "mohamed_hammad.png";
         link.href = canvas.toDataURL("image/png");
         link.click();
     }
 
-    document.getElementById("name").addEventListener("input", update);
-    document.getElementById("family").addEventListener("input", update);
-    document.getElementById("country").addEventListener("input", update);
-
+    document.querySelectorAll("input").forEach(el => {
+        el.addEventListener("input", update);
+    });
 </script>
 
 </body>
