@@ -26,6 +26,12 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
         .inputs {
             margin-bottom: 25px;
             display: grid;
@@ -83,6 +89,7 @@
 <body>
 
 <div class="container">
+    <h1>مولد بطاقة الانتخاب</h1>
 
     <div class="inputs">
         <input type="text" id="name" placeholder="اسم الشخص">
@@ -99,20 +106,26 @@
 </div>
 
 <script>
-    const imageUrl = "https://github.com/mohamednasr5/go/blob/3d100521b8c46af4401f419ab0239fa7210fa3b3/11.png";
+    const imageUrl = "https://raw.githubusercontent.com/mohamednasr5/go/3d100521b8c46af4401f419ab0239fa7210fa3b3/11.png";
 
     let bg = null;
 
     function loadImage() {
         let img = new Image();
         img.crossOrigin = "anonymous";
-        img.onload = () => bg = img;
+        img.onload = () => {
+            bg = img;
+            update();
+        };
+        img.onerror = () => {
+            console.log("خطأ في تحميل الصورة");
+            update();
+        };
         img.src = imageUrl;
     }
 
     loadImage();
 
-    // إحداثيات المستطيل الأحمر في الصورة
     const rectX = 180;
     const rectY = 40;
     const rectW = 500;
@@ -129,14 +142,16 @@
         canvas.width = 900;
         canvas.height = 600;
 
-        if (bg) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+        if (bg) {
+            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+        }
 
         ctx.textAlign = "center";
         ctx.fillStyle = "#000";
-        ctx.font = "bold 30px Arial";
+        ctx.font = "bold 32px Arial";
 
         const centerX = rectX + rectW / 2;
-        const lineSpacing = 38;
+        const lineSpacing = 40;
 
         const line1 = name;
         const line2 = `وعائلتي ${family}`;
@@ -152,7 +167,7 @@
     function downloadImage() {
         const canvas = document.getElementById("previewCanvas");
         const link = document.createElement("a");
-        link.download = "banner.png";
+        link.download = "ballot-card.png";
         link.href = canvas.toDataURL("image/png");
         link.click();
     }
