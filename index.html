@@ -147,27 +147,27 @@
         }
 
         ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillStyle = "#000";
         ctx.font = "bold 32px Arial";
 
         const centerX = rectX + rectW / 2;
+        const centerY = rectY + rectH / 2;
         const lineSpacing = 40;
 
         const line1 = name;
         const line2 = `وعائلتي ${family}`;
         const line3 = `من ${country}`;
 
-        const startY = rectY + rectH / 2 - lineSpacing;
-
-        ctx.fillText(line1, centerX, startY);
-        ctx.fillText(line2, centerX, startY + lineSpacing);
-        ctx.fillText(line3, centerX, startY + lineSpacing * 2);
+        ctx.fillText(line1, centerX, centerY - lineSpacing);
+        ctx.fillText(line2, centerX, centerY);
+        ctx.fillText(line3, centerX, centerY + lineSpacing);
     }
 
     function downloadImage() {
         const canvas = document.getElementById("previewCanvas");
         const link = document.createElement("a");
-        link.download = "ballot-card.png";
+        link.download = "mohamed hammad.png";
         link.href = canvas.toDataURL("image/png");
         link.click();
     }
